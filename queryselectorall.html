@@ -1,0 +1,58 @@
+<!doctype html>
+<html> 
+ <head> 
+  <title>Item Lister</title> 
+  <meta charset="UTF-8"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1"> 
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> 
+ <style type="text/css" id="dcoder_stylesheet">.custom-table {
+  border-color: #d3d3d3;
+}</style></head> 
+ <body> 
+  <div class="container"> 
+   <div class="row mt-3 mb-3"> 
+    <div class="col-12"> 
+     <h1 class="bg-success text-white p-2">Item Lister</h1> 
+    </div> 
+   </div> 
+   <div class="row"> 
+    <div class="col-12"> 
+     <h2>Add Items</h2> 
+     <form> 
+      <div class="form-group"> 
+       <input type="text" class="form-control" id="itemInput" placeholder="Enter item"> 
+      </div> <button type="submit" class="btn btn-primary">Submit</button> 
+     </form> 
+    </div> 
+   </div> 
+   <div class="row mt-3 mb-3"> 
+    <div class="col-12"> 
+     <h2>Items</h2> 
+     <table class="table table-bordered custom-table"> 
+      <tbody> 
+       <tr class="table-light"> 
+        <td>Item 1</td> 
+       </tr> 
+       <tr class="table-light"> 
+        <td>Item 2</td> 
+       </tr> 
+       <tr class="table-light"> 
+        <td>Item 3</td> 
+       </tr> 
+       <tr class="table-light"> 
+        <td>Item 4</td> 
+       </tr> 
+      </tbody> 
+     </table> 
+    </div> 
+   </div> 
+  </div> 
+ 
+<script type="text/javascript" id="dcoder_script">var secondItem = document.querySelectorAll("tr:nth-child(2) td");
+secondItem[0].style.color = "green";
+
+ 
+var oddItems = document.querySelectorAll("tr:nth-child(odd)");
+for (var i = 0; i < oddItems.length; i++) {
+  oddItems[i].style.backgroundColor = "green !important";
+}</script></body></html>
