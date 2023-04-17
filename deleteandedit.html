@@ -41,50 +41,73 @@
     <!-- Bootstrap JS -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+XJgbEwezTCtfpjW3qFa5YdYzVRblg5" crossorigin="anonymous"></script>
   
-<script type="text/javascript" id="dcoder_script">// Add item form submit event
-      document.getElementById('addForm').addEventListener('submit', addItem);
-      
-      // Delete item event
-      document.getElementById('items').addEventListener('click', deleteItem);
+<script type="text/javascript" id="dcoder_script"> // UI Vars
+const form = document.querySelector('#addForm');
+const itemList = document.querySelector('#items');
+const filter = document.querySelector('#filter');
 
-      // Add item function
-      function addItem(e){
-        e.preventDefault();
+// Add Item Event
+form.addEventListener('submit', addItem);
 
-        // Get input value
-        var newItem = document.getElementById('item').value;
+// Delete Item Event
+itemList.addEventListener('click', removeItem);
 
-        // Create new li element
-        var li = document.createElement('li');
-        li.className = 'list-group-item';
-        li.appendChild(document.createTextNode(newItem));
+// Filter Event
+filter.addEventListener('keyup', filterItems);
 
-        // Create delete button element
-        var deleteBtn = document.createElement('button');
-        deleteBtn.className = 'btn btn-danger btn-sm float-right delete';
-        deleteBtn.appendChild(document.createTextNode('X'));
+// Add Item
+function addItem(e){
+  e.preventDefault();
+  
+  // Get input values
+  const newItem = document.querySelector('#item').value;
+  const newDesc = document.querySelector('#desc').value;
 
-        // Create edit button element
-        var editBtn = document.createElement('button');
-        editBtn.className = 'btn btn-secondary btn-sm float-right mr-2 edit';
-        editBtn.appendChild(document.createTextNode('Edit'));
+  // Create new li element
+  const li = document.createElement('li');
+  li.className = 'list-group-item';
+  li.appendChild(document.createTextNode(newItem));
+  
+  // Create new p element
+  const desc = document.createElement('p');
+  desc.appendChild(document.createTextNode(newDesc));
+  li.appendChild(desc);
 
-        // Append delete button to li
-        li.appendChild(deleteBtn);
+  // Create del button element
+  const deleteBtn = document.createElement('button');
+  deleteBtn.className = 'btn btn-danger btn-sm float-right delete';
+  deleteBtn.appendChild(document.createTextNode('X'));
+  li.appendChild(deleteBtn);
 
-        // Append edit button to li
-        li.appendChild(editBtn);
+  // Append li to list
+  itemList.appendChild(li);
+}
 
-        // Append li to list
-        document.getElementById('items').appendChild(li);
-      }
+// Remove Item
+function removeItem(e){
+  if(e.target.classList.contains('delete')){
+    if(confirm('Are You Sure?')){
+      const li = e.target.parentElement;
+      itemList.removeChild(li);
+    }
+  }
+}
 
-      // Delete item function
-      function deleteItem(e){
-        if(e.target.classList.contains('delete')){
-          if(confirm('Are You Sure?')){
-            var li = e.target.parentElement;
-            document.getElementById('items').removeChild(li);
-          }
-        }
-      }</script></body></html>
+// Filter Items
+function filterItems(e){
+  // convert text to lowercase
+  const text = e.target.value.toLowerCase();
+  // Get list items
+  const items = itemList.getElementsByTagName('li');
+  // Convert to an array
+  Array.from(items).forEach(function(item){
+    const itemName = item.firstChild.textContent;
+    const itemDesc = item.querySelector('p').textContent;
+    if(itemName.toLowerCase().indexOf(text) != -1 || itemDesc.toLowerCase().indexOf(text) != -1){
+      item.style.display = 'block';
+    } else {
+      item.style.display = 'none';
+    }
+  });
+}
+</script></body></html>
