@@ -1,0 +1,106 @@
+<!doctype html>
+<html> 
+ <head> 
+  <title>Bootstrap Registration Form</title> 
+  <meta charset="UTF-8"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1"> 
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"> 
+ </head> 
+ <body> 
+  <div class="container mt-5"> 
+   <div class="row justify-content-center"> 
+    <div class="col-md-6"> 
+     <form onsubmit="printInput(event)" class="border border-primary p-4 rounded"> 
+      <h1 class="text-center mb-4 text-orange">Book a call</h1> 
+      <h6 class="text-center mb-4">Book a call slot and our representative will call within 1hr of selected time</h6> 
+      <div class="form-group"> <label for="name">Name:</label> 
+       <input type="text" class="form-control" id="name" name="name" placeholder="Enter name"> 
+      </div> 
+      <div class="form-group"> <label for="email">Email:</label> 
+       <input type="email" class="form-control" id="email" name="email" placeholder="Enter email"> 
+      </div> 
+      <div class="form-group"> <label for="phone">Phone:</label> 
+       <input type="tel" class="form-control" id="phone" name="phone" placeholder="Enter phone"> 
+      </div> 
+      <div class="form-group"> <label for="time">Time for call:</label> 
+       <div class="row"> 
+        <div class="col"> 
+         <input type="date" class="form-control" id="date" name="date" placeholder="Enter date"> 
+        </div> 
+        <div class="col"> 
+         <input type="time" class="form-control" id="time" name="time" placeholder="Enter time"> 
+        </div> 
+       </div> 
+      </div> 
+      <div class="form-group"> <button type="submit" class="btn btn-primary btn-block" style="background-color: orange;">GET A CALL</button> 
+      </div> 
+     </form> 
+    </div> 
+   </div> 
+   <div class="row mt-5">
+    <div class="col-md-6 mx-auto">
+     <div class="list-group" id="userList"></div>
+    </div>
+   </div>
+  </div> 
+  <ul id>"items"</ul>
+  
+  <script type="text/javascript" id="dcoder_script">
+  const itemsList = document.getElementById('items');
+
+  function addItem() {
+    const item = document.createElement('li');
+    item.textContent = 'Example item';
+
+    const deleteButton = document.createElement('button');
+    deleteButton.textContent = 'Delete';
+    deleteButton.addEventListener('click', () => {
+      item.remove();
+      removeItemFromLocalStorage(item);
+    });
+
+    item.appendChild(deleteButton);
+    itemsList.appendChild(item);
+    saveItemToLocalStorage(item);
+  }
+
+  function removeItemFromLocalStorage(item) {
+    const items = getItemsFromLocalStorage();
+    const itemIndex = Array.from(itemsList.children).indexOf(item);
+    items.splice(itemIndex, 1);
+    localStorage.setItem('items', JSON.stringify(items));
+  }
+
+  function getItemsFromLocalStorage() {
+    let items = localStorage.getItem('items');
+    if (!items) {
+      items = [];
+    } else {
+      items = JSON.parse(items);
+    }
+    return items;
+  }
+
+  function saveItemToLocalStorage(item) {
+    const items = getItemsFromLocalStorage();
+    items.push(item.textContent);
+    localStorage.setItem('items', JSON.stringify(items));
+  }
+
+  const items = getItemsFromLocalStorage();
+  for (const item of items) {
+    const li = document.createElement('li');
+    li.textContent = item;
+
+    const deleteButton = document.createElement('button');
+    deleteButton.textContent = 'Delete';
+    deleteButton.addEventListener('click', () => {
+      li.remove();
+      removeItemFromLocalStorage(li);
+    });
+
+    li.appendChild(deleteButton);
+    itemsList.appendChild(li);
+  }
+
+</script></body></html>
