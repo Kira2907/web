@@ -1,0 +1,163 @@
+<!doctype html>
+<html> 
+ <head> 
+  <title>Bootstrap Registration Form</title> 
+  <meta charset="UTF-8"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1"> 
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"> 
+ </head> 
+ <body> 
+  <div class="container mt-5"> 
+   <div class="row justify-content-center"> 
+    <div class="col-md-6"> 
+     <form onsubmit="printInput(event)" class="border border-primary p-4 rounded"> 
+      <h1 class="text-center mb-4 text-orange">Book a call</h1> 
+      <h6 class="text-center mb-4">Book a call slot and our representative will call within 1hr of selected time</h6> 
+      <div class="form-group"> <label for="name">Name:</label> 
+       <input type="text" class="form-control" id="name" name="name" placeholder="Enter name"> 
+      </div> 
+      <div class="form-group"> <label for="email">Email:</label> 
+       <input type="email" class="form-control" id="email" name="email" placeholder="Enter email"> 
+      </div> 
+      <div class="form-group"> <label for="phone">Phone:</label> 
+       <input type="tel" class="form-control" id="phone" name="phone" placeholder="Enter phone"> 
+      </div> 
+      <div class="form-group"> <label for="time">Time for call:</label> 
+       <div class="row"> 
+        <div class="col"> 
+         <input type="date" class="form-control" id="date" name="date" placeholder="Enter date"> 
+        </div> 
+        <div class="col"> 
+         <input type="time" class="form-control" id="time" name="time" placeholder="Enter time"> 
+        </div> 
+       </div> 
+      </div> 
+      <div class="form-group"> <button type="submit" class="btn btn-primary btn-block" style="background-color: orange;">GET A CALL</button> 
+      </div> 
+     </form> 
+    </div> 
+   </div> 
+   <div class="row mt-5"> 
+    <div class="col-md-6 mx-auto"> 
+     <div class="list-group" id="userList"></div> 
+    </div> 
+   </div> 
+  </div> 
+  <ul id>
+   "items"
+  </ul> 
+ 
+<script type="text/javascript" id="dcoder_script">// get the form element
+const form = document.querySelector('form');
+
+// get the user list element
+const userList = document.getElementById('userList');
+
+// add a submit event listener to the form
+form.addEventListener('submit', (event) => {
+  // prevent the default form submission
+  event.preventDefault();
+
+  // get the form input values
+  const name = document.getElementById('name').value;
+  const email = document.getElementById('email').value;
+  const phone = document.getElementById('phone').value;
+  const date = document.getElementById('date').value;
+  const time = document.getElementById('time').value;
+
+  // create a user object
+  const user = { name, email, phone, date, time };
+
+  // add the user object to the user list
+  addUserToList(user);
+
+  // add the user object to local storage
+  addUserToLocalStorage(user);
+
+  // reset the form
+  form.reset();
+});
+
+// function to add a user object to the user list
+function addUserToList(user) {
+  // create a new list item element
+  const listItem = document.createElement('li');
+  listItem.className = 'list-group-item';
+
+  // create a delete button element
+  const deleteButton = document.createElement('button');
+  deleteButton.className = 'btn btn-danger float-right ml-2';
+  deleteButton.innerHTML = 'Delete';
+  deleteButton.addEventListener('click', () => {
+    // remove the user object from the user list
+    listItem.remove();
+
+    // remove the user object from local storage
+    removeUserFromLocalStorage(user);
+  });
+
+  // create an edit button element
+  const editButton = document.createElement('button');
+  editButton.className = 'btn btn-primary float-right ml-2';
+  editButton.innerHTML = 'Edit';
+  editButton.addEventListener('click', () => {
+    // remove the user object from the user list
+    listItem.remove();
+
+    // remove the user object from local storage
+    removeUserFromLocalStorage(user);
+
+    // set the form input values to the user object values
+    document.getElementById('name').value = user.name;
+    document.getElementById('email').value = user.email;
+    document.getElementById('phone').value = user.phone;
+    document.getElementById('date').value = user.date;
+    document.getElementById('time').value = user.time;
+  });
+
+  // create a text node with the user object data
+  const textNode = document.createTextNode(`${user.name} - ${user.email} - ${user.phone} - ${user.date} - ${user.time}`);
+
+  // append the delete button, edit button, and text node to the list item
+  listItem.appendChild(deleteButton);
+  listItem.appendChild(editButton);
+  listItem.appendChild(textNode);
+
+  // append the list item to the user list
+  userList.appendChild(listItem);
+}
+
+// function to add a user object to local storage
+function addUserToLocalStorage(user) {
+  // get the existing user list from local storage
+  const userList = getUserListFromLocalStorage();
+
+  // add the new user object to the user list
+  userList.push(user);
+
+  // save the updated user list to local storage
+  localStorage.setItem('userList', JSON.stringify(userList));
+}
+
+// function to get the user list from local storage
+function getUserListFromLocalStorage() {
+  // get the user list from local storage or create an empty array if it doesn't exist
+  return JSON.parse(localStorage.getItem('userList')) || [];
+}
+
+// function to remove a user object from local storage
+function removeUserFromLocalStorage(user) {
+  // get the existing user list from local storage
+  const userList = getUserListFromLocalStorage();
+
+  // remove the user object from the user list
+const updatedUserList = userList.filter((u) => u.email !== user.email);
+
+  // update the user list in local storage
+  localStorage.setItem("userList", JSON.stringify(updatedUserList));
+
+  // return the updated user list
+  return updatedUserList;
+}
+ 
+</script></body></html>
