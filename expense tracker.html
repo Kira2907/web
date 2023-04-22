@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Expense Tracker App</title>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="mb-4">Expense Tracker App</h1>
+        <!-- Input form for adding expenses -->
+        <form id="expense-form" class="mb-3">
+            <div class="form-group">
+                <label for="expense">Expense Amount</label>
+                <input type="number" class="form-control" id="expense" placeholder="Enter expense amount" required>
+            </div>
+            <div class="form-group">
+                <label for="description">Expense Description</label>
+                <input type="text" class="form-control" id="description" placeholder="Enter expense description" required>
+            </div>
+            <div class="form-group">
+                <label for="category">Expense Category</label>
+                <input type="text" class="form-control" id="category" placeholder="Enter expense category" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Add Expense</button>
+        </form>
+        <!-- Table to display expenses -->
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Amount</th>
+                    <th>Description</th>
+                    <th>Category</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="expense-list"></tbody>
+        </table>
+    </div>
+    <!-- Bootstrap JS and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <!-- JavaScript code -->
+    <script src="app.js"></script>
+
+<script type="text/javascript" id="dcoder_script">// Initialize expenses array
+let expenses = [];
+
+// Add event listener to submit button
+document.getElementById('expense-form').addEventListener('submit', function(event) {
+  // Prevent form from submitting
+  event.preventDefault();
+
+  // Get input values
+  const expenseAmount = parseFloat(document.getElementById('expense').value);
+  const expenseDescription = document.getElementById('description').value;
+  const expenseCategory = document.getElementById('category').value;
+
+  // Create expense object
+  const expense = {
+    amount: expenseAmount,
+    description: expenseDescription,
+    category: expenseCategory
+  };
+
+  // Add expense to expenses array
+  expenses.push(expense);
+
+  // Save expenses array to local storage
+  localStorage.setItem('expenses', JSON.stringify(expenses));
+
+  // Display expenses in table
+  displayExpenses();
+
+  // Clear input fields
+  document.getElementById('expense-form').reset();
+});
+
+// Display expenses in table on page load
+displayExpenses();
+
+function displayExpenses() {
+  // Get table body element
+  const tableBody = document.getElementById('expense-list');
+
+  // Clear table body
+  tableBody.innerHTML = '';
+
+  // Get expenses from local storage
+  expenses = JSON.parse(localStorage.getItem('expenses')) || [];
+
+  // Loop through expenses and create table rows
+  expenses.forEach(function(expense, index) {
+    // Create table row
+    const row = document.createElement('tr');
+
+    // Create table cells
+    const amountCell = document.createElement('td');
+    const descriptionCell = document.createElement('td');
+    const categoryCell = document.createElement('td');
+    const deleteCell = document.createElement('td');
+    const editCell = document.createElement('td');
+
+    // Add text to table cells
+    amountCell.textContent = expense.amount.toFixed(2);
+    descriptionCell.textContent = expense.description;
+    categoryCell.textContent = expense.category;
+    deleteCell.innerHTML = '<button class="btn btn-danger btn-sm delete-expense" data-index="' + index + '">Delete</button>';
+    editCell.innerHTML = '<button class="btn btn-primary btn-sm edit-expense" data-index="' + index + '">Edit</button>';
+
+    // Append cells to row
+    row.appendChild(amountCell);
+    row.appendChild(descriptionCell);
+    row.appendChild(categoryCell);
+    row.appendChild(deleteCell);
+    row.appendChild(editCell);
+
+    // Append row to table body
+    tableBody.appendChild(row);
+  });
+
+  // Add event listener to table body for delete and edit buttons
+  tableBody.addEventListener('click', function(event) {
+    if (event.target.classList.contains('delete-expense')) {
+      const index = parseInt(event.target.getAttribute('data-index'));
+      expenses.splice(index, 1);
+      localStorage.setItem('expenses', JSON.stringify(expenses));
+      displayExpenses();
+    } else if (event.target.classList.contains('edit-expense')) {
+      const index = parseInt(event.target.getAttribute('data-index'));
+      const expense = expenses[index];
+      document.getElementById('expense').value = expense.amount.toFixed(2);
+      document.getElementById('description').value = expense.description;
+      document.getElementById('category').value = expense.category;
+      expenses.splice(index, 1);
+      localStorage.setItem('expenses', JSON.stringify(expenses));
+      displayExpenses();
+    }
+  });
+}
+</script></body></html>
