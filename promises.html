@@ -1,0 +1,29 @@
+<html>
+ <head></head>
+ <body>
+<script type="text/javascript" id="dcoder_script">console.log('ticket1');
+console.log('ticket2');
+
+async function main()
+{
+  const getTicket= await new Promise( (resolve,reject)=> {
+    setTimeout(()=>{resolve('ticket3')}, 3000);
+  })
+  console.log(getTicket);
+  
+  const getPopcorn= await new Promise( (resolve,reject)=> {
+    setTimeout(()=>{resolve('Popcorn')}, 1000);
+  })
+  
+  const getButter= await new Promise( (resolve,reject)=> {
+    setTimeout(()=>{resolve('Butter')}, 1000);
+  })
+  
+  const getColdDrink= await new Promise( (resolve,reject)=> {
+    setTimeout(()=>{resolve('Cold drink')}, 1000);
+  })
+  
+  const [P,B,Cd]= await Promise.all([getPopcorn,getButter,getColdDrink]);
+  console.log(P+','+B+','+Cd);
+}
+main();</script></body></html>
