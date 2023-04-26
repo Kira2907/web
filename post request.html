@@ -1,0 +1,93 @@
+<!doctype html>
+<html> 
+ <head> 
+  <title>Bootstrap Registration Form</title> 
+  <meta charset="UTF-8"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1"> 
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"> 
+ </head> 
+ <body> 
+  <div class="container mt-5"> 
+   <div class="row justify-content-center"> 
+    <div class="col-md-6"> 
+     <form onsubmit="printInput(event)" class="border border-primary p-4 rounded"> 
+      <h1 class="text-center mb-4 text-orange">Book a call</h1> 
+      <h6 class="text-center mb-4">Book a call slot and our representative will call within 1hr of selected time</h6> 
+      <div class="form-group"> <label for="name">Name:</label> 
+       <input type="text" class="form-control" id="name" name="name" placeholder="Enter name"> 
+      </div> 
+      <div class="form-group"> <label for="email">Email:</label> 
+       <input type="email" class="form-control" id="email" name="email" placeholder="Enter email"> 
+      </div> 
+      <div class="form-group"> <label for="phone">Phone:</label> 
+       <input type="tel" class="form-control" id="phone" name="phone" placeholder="Enter phone"> 
+      </div> 
+      <div class="form-group"> <label for="time">Time for call:</label> 
+       <div class="row"> 
+        <div class="col"> 
+         <input type="date" class="form-control" id="date" name="date" placeholder="Enter date"> 
+        </div> 
+        <div class="col"> 
+         <input type="time" class="form-control" id="time" name="time" placeholder="Enter time"> 
+        </div> 
+       </div> 
+      </div> 
+      <div class="form-group"> <button type="submit" class="btn btn-primary btn-block" style="background-color: orange;">GET A CALL</button> 
+      </div> 
+     </form> 
+    </div> 
+   </div> 
+   <div class="row mt-5"> 
+    <div class="col-md-6 mx-auto"> 
+     <div class="list-group" id="userList"></div> 
+    </div> 
+   </div> 
+  </div> 
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+ 
+<script type="text/javascript" id="dcoder_script">// Get the form elements
+const form = document.querySelector('form');
+const nameInput = form.querySelector('#name');
+const emailInput = form.querySelector('#email');
+const phoneInput = form.querySelector('#phone');
+const dateInput = form.querySelector('#date');
+const timeInput = form.querySelector('#time');
+const userList = document.querySelector('#userList');
+
+// Add an event listener to the form submission
+form.addEventListener('submit', (event) => {
+  event.preventDefault(); // Prevent the default form submission
+
+  // Create a user object with the form data
+  const user = {
+    name: nameInput.value,
+    email: emailInput.value,
+    phone: phoneInput.value,
+    date: dateInput.value,
+    time: timeInput.value,
+  };
+
+  // Send a POST request to the API endpoint
+  axios.post('https://crudcrud.com/api/bb71b2acbfc4c8a91eed9e1ebcd65f3/userdetails', user)
+    .then((response) => {
+      // Display the response data on the screen
+      const userData = response.data;
+      const listItem = document.createElement('div');
+      listItem.classList.add('list-group-item');
+      listItem.innerHTML = `
+        <h5 class="mb-1">${userData.name}</h5>
+        <p class="mb-1">${userData.email}</p>
+        <p class="mb-1">${userData.phone}</p>
+        <p class="mb-1">${userData.date} ${userData.time}</p>
+      `;
+      userList.appendChild(listItem);
+    })
+    .catch((error) => {
+      // Display an error message on the screen
+      const errorMessage = document.createElement('h4');
+      errorMessage.textContent = 'something went wrong';
+      userList.appendChild(errorMessage);
+      console.error(error);
+    });
+});
+</script></body></html>
