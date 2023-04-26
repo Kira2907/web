@@ -1,0 +1,137 @@
+<!doctype html>
+<html> 
+ <head> 
+  <title>Bootstrap Registration Form</title> 
+  <meta charset="UTF-8"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1"> 
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"> 
+ </head> 
+ <body> 
+  <div class="container mt-5"> 
+   <div class="row justify-content-center"> 
+    <div class="col-md-6"> 
+     <form onsubmit="printInput(event)" class="border border-primary p-4 rounded"> 
+      <h1 class="text-center mb-4 text-orange">Book a call</h1> 
+      <h6 class="text-center mb-4">Book a call slot and our representative will call within 1hr of selected time</h6> 
+      <div class="form-group"> <label for="name">Name:</label> 
+       <input type="text" class="form-control" id="name" name="name" placeholder="Enter name"> 
+      </div> 
+      <div class="form-group"> <label for="email">Email:</label> 
+       <input type="email" class="form-control" id="email" name="email" placeholder="Enter email"> 
+      </div> 
+      <div class="form-group"> <label for="phone">Phone:</label> 
+       <input type="tel" class="form-control" id="phone" name="phone" placeholder="Enter phone"> 
+      </div> 
+      <div class="form-group"> <label for="time">Time for call:</label> 
+       <div class="row"> 
+        <div class="col"> 
+         <input type="date" class="form-control" id="date" name="date" placeholder="Enter date"> 
+        </div> 
+        <div class="col"> 
+         <input type="time" class="form-control" id="time" name="time" placeholder="Enter time"> 
+        </div> 
+       </div> 
+      </div> 
+      <div class="form-group"> <button type="submit" class="btn btn-primary btn-block" style="background-color: orange;">GET A CALL</button> 
+      </div> 
+     </form> 
+    </div> 
+   </div> 
+   <div class="row mt-5"> 
+    <div class="col-md-6 mx-auto"> 
+     <div class="list-group" id="userList"></div> 
+    </div> 
+   </div> 
+  </div> 
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script> 
+ 
+<script type="text/javascript" id="dcoder_script">const form = document.querySelector('form');
+const userList = document.getElementById('userList');
+
+form.addEventListener('submit', (event) => {
+  event.preventDefault();
+
+  const name = document.getElementById('name').value;
+  const email = document.getElementById('email').value;
+  const phone = document.getElementById('phone').value;
+  const date = document.getElementById('date').value;
+  const time = document.getElementById('time').value;
+
+  const user = { name, email, phone, date, time };
+
+  axios.post('https://crudcrud.com/api/dbb71b2acbfc4c8a91eed9e1ebcd65f3/userdetails', user)
+    .then((response) => {
+      addUserToList(response.data);
+      form.reset();
+    })
+    .catch((error) => {
+      const errorMessage = document.createElement('h4');
+      errorMessage.innerHTML = 'Something went wrong';
+      userList.appendChild(errorMessage);
+      console.error(error);
+    });
+});
+
+function addUserToList(user) {
+  const listItem = document.createElement('li');
+  listItem.className = 'list-group-item';
+
+  const deleteButton = document.createElement('button');
+  deleteButton.className = 'btn btn-danger float-right ml-2';
+  deleteButton.innerHTML = 'Delete';
+  deleteButton.addEventListener('click', () => {
+    axios.delete(`https://crudcrud.com/api/dbb71b2acbfc4c8a91eed9e1ebcd65f3/userdetails/${user._id}`)
+      .then(() => {
+        listItem.remove();
+      })
+      .catch((error) => {
+        const errorMessage = document.createElement('h4');
+        errorMessage.innerHTML = 'Something went wrong';
+        userList.appendChild(errorMessage);
+        console.error(error);
+      });
+  });
+
+  const textNode = document.createTextNode(`${user.name} - ${user.email} - ${user.phone} - ${user.date} - ${user.time}`);
+  listItem.appendChild(deleteButton);
+  listItem.appendChild(textNode);
+
+  userList.appendChild(listItem);
+
+  axios.get('https://crudcrud.com/api/dbb71b2acbfc4c8a91eed9e1ebcd65f3/userdetails')
+    .then((response) => {
+      userList.innerHTML = '';
+      response.data.forEach((user) => {
+        const listItem = document.createElement('li');
+        listItem.className = 'list-group-item';
+
+        const deleteButton = document.createElement('button');
+        deleteButton.className = 'btn btn-danger float-right ml-2';
+        deleteButton.innerHTML = 'Delete';
+        deleteButton.addEventListener('click', () => {
+          axios.delete(`https://crudcrud.com/api/dbb71b2acbfc4c8a91eed9e1ebcd65f3/userdetails/${user._id}`)
+            .then(() => {
+              listItem.remove();
+            })
+            .catch((error) => {
+              const errorMessage = document.createElement('h4');
+              errorMessage.innerHTML = 'Something went wrong';
+              userList.appendChild(errorMessage);
+              console.error(error);
+            });
+        });
+
+        const textNode = document.createTextNode(`${user.name} - ${user.email} - ${user.phone} - ${user.date} - ${user.time}`);
+        listItem.appendChild(deleteButton);
+        listItem.appendChild(textNode);
+
+        userList.appendChild(listItem);
+      });
+    })
+    .catch((error) => {
+      const errorMessage = document.createElement('h4');
+      errorMessage.innerHTML = 'Something went wrong';
+      userList.appendChild(errorMessage);
+      console.error(error);
+    });
+}</script></body></html>
