@@ -1,0 +1,126 @@
+<!doctype html>
+<html> 
+ <head> 
+  <title>Bootstrap Registration Form</title> 
+  <meta charset="UTF-8"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1"> 
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"> 
+ </head> 
+ <body> 
+  <div class="container mt-5"> 
+   <div class="row justify-content-center"> 
+    <div class="col-md-6"> 
+     <form onsubmit="printInput(event)" class="border border-primary p-4 rounded"> 
+      <h1 class="text-center mb-4 text-orange">Book a call</h1> 
+      <h6 class="text-center mb-4">Book a call slot and our representative will call within 1hr of selected time</h6> 
+      <div class="form-group"> <label for="name">Name:</label> 
+       <input type="text" class="form-control" id="name" name="name" placeholder="Enter name"> 
+      </div> 
+      <div class="form-group"> <label for="email">Email:</label> 
+       <input type="email" class="form-control" id="email" name="email" placeholder="Enter email"> 
+      </div> 
+      <div class="form-group"> <label for="phone">Phone:</label> 
+       <input type="tel" class="form-control" id="phone" name="phone" placeholder="Enter phone"> 
+      </div> 
+      <div class="form-group"> <label for="time">Time for call:</label> 
+       <div class="row"> 
+        <div class="col"> 
+         <input type="date" class="form-control" id="date" name="date" placeholder="Enter date"> 
+        </div> 
+        <div class="col"> 
+         <input type="time" class="form-control" id="time" name="time" placeholder="Enter time"> 
+        </div> 
+       </div> 
+      </div> 
+      <div class="form-group"> <button type="submit" class="btn btn-primary btn-block" style="background-color: orange;">GET A CALL</button> 
+      </div> 
+     </form> 
+    </div> 
+   </div> 
+   <div class="row mt-5"> 
+    <div class="col-md-6 mx-auto"> 
+     <div class="list-group" id="userList"></div> 
+    </div> 
+   </div> 
+  </div> 
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script> 
+ 
+<script type="text/javascript" id="dcoder_script">// get the form element
+const form = document.querySelector('form');
+
+// get the user list element
+const userList = document.getElementById('userList');
+
+// API endpoint
+const apiUrl = 'https://crudcrud.com/api/dbb71b2acbfc4c8a91eed9e1ebcd65f3/userdetails';
+
+// add a submit event listener to the form
+form.addEventListener('submit', (event) => {
+  // prevent the default form submission
+  event.preventDefault();
+
+  // get the form input values
+  const name = document.getElementById('name').value;
+  const email = document.getElementById('email').value;
+  const phone = document.getElementById('phone').value;
+  const date = document.getElementById('date').value;
+  const time = document.getElementById('time').value;
+
+  // create a user object
+  const user = { name, email, phone, date, time };
+
+  // add the user object to the user list
+  addUserToList(user);
+
+  // send the user object to the API endpoint
+  axios.post(apiUrl, user)
+    .then((response) => {
+      console.log(response.data);
+    })
+    .catch((error) => {
+      console.error(error);
+      const errorElem = document.createElement('h4');
+      errorElem.textContent = 'Something went wrong';
+      userList.appendChild(errorElem);
+    });
+
+  // reset the form
+  form.reset();
+});
+
+// function to add a user object to the user list
+function addUserToList(user) {
+  // create a new list item element
+  const listItem = document.createElement('li');
+  listItem.className = 'list-group-item';
+
+  // create a text node with the user object data
+  const textNode = document.createTextNode(`${user.name} - ${user.email} - ${user.phone} - ${user.date} - ${user.time}`);
+
+  // append the text node to the list item
+  listItem.appendChild(textNode);
+
+  // append the list item to the user list
+  userList.appendChild(listItem);
+
+  // get the user list from the API endpoint
+  axios.get(apiUrl)
+    .then((response) => {
+      console.log(response.data);
+      userList.innerHTML = '';
+      response.data.forEach((userData) => {
+        const listItem = document.createElement('li');
+        listItem.className = 'list-group-item';
+        const textNode = document.createTextNode(`${userData.name} - ${userData.email} - ${userData.phone} - ${userData.date} - ${userData.time}`);
+        listItem.appendChild(textNode);
+        userList.appendChild(listItem);
+      });
+    })
+    .catch((error) => {
+      console.error(error);
+      const errorElem = document.createElement('h4');
+      errorElem.textContent = 'Something went wrong';
+      userList.appendChild(errorElem);
+    });
+}
+</script></body></html>
