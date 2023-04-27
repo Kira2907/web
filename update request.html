@@ -1,0 +1,190 @@
+<!doctype html>
+<html> 
+ <head> 
+  <title>Bootstrap Registration Form</title> 
+  <meta charset="UTF-8"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1"> 
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"> 
+ </head> 
+ <body> 
+  <div class="container mt-5"> 
+   <div class="row justify-content-center"> 
+    <div class="col-md-6"> 
+     <form onsubmit="printInput(event)" class="border border-primary p-4 rounded"> 
+      <h1 class="text-center mb-4 text-orange">Book a call</h1> 
+      <h6 class="text-center mb-4">Book a call slot and our representative will call within 1hr of selected time</h6> 
+      <div class="form-group"> <label for="name">Name:</label> 
+       <input type="text" class="form-control" id="name" name="name" placeholder="Enter name"> 
+      </div> 
+      <div class="form-group"> <label for="email">Email:</label> 
+       <input type="email" class="form-control" id="email" name="email" placeholder="Enter email"> 
+      </div> 
+      <div class="form-group"> <label for="phone">Phone:</label> 
+       <input type="tel" class="form-control" id="phone" name="phone" placeholder="Enter phone"> 
+      </div> 
+      <div class="form-group"> <label for="time">Time for call:</label> 
+       <div class="row"> 
+        <div class="col"> 
+         <input type="date" class="form-control" id="date" name="date" placeholder="Enter date"> 
+        </div> 
+        <div class="col"> 
+         <input type="time" class="form-control" id="time" name="time" placeholder="Enter time"> 
+        </div> 
+       </div> 
+      </div> 
+      <div class="form-group"> <button type="submit" class="btn btn-primary btn-block" style="background-color: orange;">GET A CALL</button> 
+      </div> 
+     </form> 
+    </div> 
+   </div> 
+   <div class="row mt-5"> 
+    <div class="col-md-6 mx-auto"> 
+     <div class="list-group" id="userList"></div> 
+    </div> 
+   </div> 
+  </div> 
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script> 
+ 
+<script type="text/javascript" id="dcoder_script">// API endpoint
+const apiEndpoint = "https://crudcrud.com/api/b4311c724e5548e497591d8e27f3e6df/data";
+
+// get the form element
+const form = document.querySelector("form");
+
+// get the user list element
+const userList = document.getElementById("userList");
+
+// make a GET request to fetch existing user details
+axios.get(apiEndpoint)
+  .then(response => {
+    const users = response.data;
+    users.forEach(user => {
+      addUserToList(user);
+    });
+  })
+  .catch(error => {
+    console.log(error);
+  });
+
+// add a submit event listener to the form
+form.addEventListener("submit", event => {
+  // prevent the default form submission
+  event.preventDefault();
+
+  // get the form input values
+  const name = document.getElementById("name").value;
+  const email = document.getElementById("email").value;
+  const phone = document.getElementById("phone").value;
+  const date = document.getElementById("date").value;
+  const time = document.getElementById("time").value;
+
+  // create a user object
+  const user = { name, email, phone, date, time };
+
+  // add the user object to the user list
+  addUserToList(user);
+
+  // add the user object to the cloud
+  addUserToCloud(user);
+
+  // reset the form
+  form.reset();
+});
+
+// function to add a user object to the user list
+function addUserToList(user) {
+  // create a new list item element
+  const listItem = document.createElement("li");
+  listItem.className = "list-group-item";
+
+  // create a delete button element
+  const deleteButton = document.createElement("button");
+  deleteButton.className = "btn btn-danger float-right ml-2";
+  deleteButton.innerHTML = "Delete";
+  deleteButton.addEventListener("click", () => {
+    // remove the user object from the user list
+    listItem.remove();
+
+    // remove the user object from the cloud
+    removeUserFromCloud(user);
+  });
+
+  // create an edit button element
+  const editButton = document.createElement("button");
+  editButton.className = "btn btn-primary float-right ml-2";
+  editButton.innerHTML = "Edit";
+  editButton.addEventListener("click", () => {
+    // set the form input values to the user object values
+    document.getElementById("name").value = user.name;
+    document.getElementById("email").value = user.email;
+    document.getElementById("phone").value = user.phone;
+    document.getElementById("date").value = user.date;
+    document.getElementById("time").value = user.time;
+
+    // remove the user object from the user list
+    listItem.remove();
+    
+    // remove the user object from the cloud
+    removeUserFromCloud(user);
+    
+    // update the user object with the new values
+    const updatedUser = { 
+      ...user,
+      name: document.getElementById("name").value,
+      email: document.getElementById("email").value,
+      phone: document.getElementById("phone").value,
+      date: document.getElementById("date").value,
+      time: document.getElementById("time").value
+    };
+
+    // add the updated user object to the user list and the cloud
+    addUserToList(updatedUser);
+    addUserToCloud(updatedUser);
+  });
+
+  // create a text node with the user object data
+  const textNode = document.createTextNode(
+    `${user.name} - ${user.email} - ${user.phone} - ${user.date} - ${user.time}`
+  );
+
+  // append the delete button, edit button, and text node to the list item
+  listItem.appendChild(deleteButton);
+  listItem.appendChild(editButton);
+  listItem.appendChild(textNode);
+
+// append the list item to the user list
+userList.appendChild(listItem);
+}
+
+// function to add a user object to the cloud
+function addUserToCloud(user) {
+axios.post(apiEndpoint, user)
+.then(response => {
+console.log(response);
+})
+.catch(error => {
+console.log(error);
+});
+}
+// function to remove a user object from the cloud
+function removeUserFromCloud(user) {
+  axios.delete(`${apiEndpoint}/${user._id}`)
+    .then(response => {
+      console.log(response);
+    })
+    .catch(error => {
+      console.log(error);
+    });
+}
+
+
+// function to update a user object in the cloud
+function editUserInCloud(updatedUser) {
+axios.put('${apiEndpoint}/${updatedUser._id}', updatedUser)
+.then(response => {
+console.log(response);
+})
+.catch(error => {
+console.log(error);
+});
+}</script></body></html>
