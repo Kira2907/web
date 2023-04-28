@@ -1,0 +1,184 @@
+<!doctype html>
+<html> 
+ <head> 
+  <title>Seller's admin page </title> 
+  <meta charset="UTF-8"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1"> 
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"> 
+ </head> 
+ <body> 
+  <div class="container mt-5"> 
+   <div class="row justify-content-center"> 
+    <div class="col-md-6"> 
+     <form onsubmit="printInput(event)" class="border border-primary p-4 rounded"> 
+      <h1 class="text-center mb-4 text-orange">Seller's admin page</h1> 
+      <div class="form-group"> <label for="price">selling price:</label> 
+       <input type="number" class="form-control" id="price" name="price" placeholder="Enter selling price"> 
+      </div> 
+      <div class="form-group"> <label for="name">Product name:</label> 
+       <input type="text" class="form-control" id="name" name="name" placeholder="Enter product name"> 
+      </div> 
+      <div class="form-group"> <button type="submit" class="btn btn-primary btn-block" style="background-color: green;">ADD PRODUCT</button> 
+      </div> 
+     </form> 
+    </div> 
+   </div> 
+   <h2 class="text-left">PRODUCTS</h2>
+   <div class="row mt-5"> 
+    <div class="col-md-6 mx-auto"> 
+     <div class="list-group" id="userList"></div> 
+    </div> 
+   </div> 
+  </div> 
+  <div id="totalValue"></div>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script> 
+ 
+<script type="text/javascript" id="dcoder_script">// API endpoint
+const apiEndpoint = "https://crudcrud.com/api/c243e5e75a3f4516bdab5b190783ab02/data";
+
+// get the form element
+const form = document.querySelector("form");
+
+// get the user list element
+const userList = document.getElementById("userList");
+
+// create a variable to keep track of the total value of products
+let totalValue = 0;
+
+// make a GET request to fetch existing user details
+axios.get(apiEndpoint)
+  .then(response => {
+    const users = response.data;
+    users.forEach(user => {
+      addUserToList(user);
+      totalValue += parseInt(user.price);
+    });
+    displayTotalValue();
+  })
+  .catch(error => {
+    console.log(error);
+  });
+
+// add a submit event listener to the form
+form.addEventListener("submit", event => {
+  // prevent the default form submission
+  event.preventDefault();
+
+  // get the form input values
+  const price = parseInt(document.getElementById("price").value);
+  const name = document.getElementById("name").value;
+
+  // create a user object
+  const user = { price, name };
+
+  // add the user object to the user list
+  addUserToList(user);
+
+  // add the user object to the cloud
+  addUserToCloud(user);
+
+  // update the total value of products
+  totalValue += price;
+  displayTotalValue();
+
+  // reset the form
+  form.reset();
+});
+
+// function to add a user object to the user list
+function addUserToList(user) {
+  // create a new list item element
+  const listItem = document.createElement("li");
+  listItem.className = "list-group-item";
+
+  // create a delete button element
+  const deleteButton = document.createElement("button");
+  deleteButton.className = "btn btn-danger float-right ml-2";
+  deleteButton.innerHTML = "Delete";
+  deleteButton.addEventListener("click", () => {
+    // remove the user object from the user list
+    listItem.remove();
+
+    // remove the user object from the cloud
+    removeUserFromCloud(user);
+
+    // update the total value of products
+    totalValue -= user.price;
+    displayTotalValue();
+  });
+
+  // create a text node with the user object data
+  const textNode = document.createTextNode(
+    `${user.price} - ${user.name}`
+  );
+
+  // append the delete button, edit button, and text node to the list item
+  listItem.appendChild(deleteButton);
+  listItem.appendChild(textNode);
+
+  // append the list item to the user list
+  userList.appendChild(listItem);
+}
+
+// function to add a user object to the cloud
+function addUserToCloud(user) {
+  axios.post(apiEndpoint, user)
+    .then(response => {
+      console.log(response);
+    })
+    .catch(error => {
+      console.log(error);
+    });
+}
+
+// function to remove a user object from the cloud
+function removeUserFromCloud(user) {
+  axios.delete(`${apiEndpoint}/${user._id}`)
+    .then(response => {
+      console.log(response);
+    })
+    .catch(error => {
+      console.log(error);
+    });
+}
+
+// function to display the total value of products
+function displayTotalValue() {
+  const totalValueElement = document.getElementById("totalValue");
+  totalValueElement.innerHTML = `Total value worth of products = Rs.${totalValue}`;
+}
+</script></body></html>user.description} - ${user.category}`
+  );
+
+  // append the delete button, edit button, and text node to the list item
+  listItem.appendChild(deleteButton);
+  listItem.appendChild(editButton);
+  listItem.appendChild(textNode);
+
+// append the list item to the user list
+userList.appendChild(listItem);
+}
+
+// function to add a user object to the cloud
+function addUserToCloud(user) {
+axios.post(apiEndpoint, user)
+.then(response => {
+console.log(response);
+})
+.catch(error => {
+console.log(error);
+});
+}
+
+// function to remove a user object from the cloud
+function removeUserFromCloud(user) {
+  axios.delete(`${apiEndpoint}/${user._id}`)
+    .then(response => {
+      console.log(response);
+    })
+    .catch(error => {
+      console.log(error);
+    });
+}
+
+ </script></body></html>
