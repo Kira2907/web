@@ -1,0 +1,146 @@
+<!doctype html>
+<html> 
+ <head> 
+  <title>Seller's admin page</title> 
+  <meta charset="UTF-8"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1"> 
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"> 
+  <style>
+      .centered-form {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+      }
+    </style> 
+ </head> 
+ <body> 
+  <div class="container"> 
+   <div class="row centered-form"> 
+    <div class="col-md-6"> 
+     <form class="border border-primary p-4 rounded"> 
+      <h1 class="text-center mb-4 text-orange">Seller's admin page</h1> 
+      <div class="form-group"> <label for="price">selling price:</label> 
+       <input type="number" class="form-control" id="price" name="price" placeholder="Enter selling price"> 
+      </div> 
+      <div class="form-group"> <label for="name">Product name:</label> 
+       <input type="text" class="form-control" id="name" name="name" placeholder="Enter product name"> 
+      </div> 
+      <div class="form-group"> <button type="submit" class="btn btn-primary btn-block" style="background-color: green;">ADD PRODUCT</button> 
+      </div> 
+     </form> 
+    </div> 
+   </div> 
+   <h2 class="text-left mt-5">PRODUCTS</h2> 
+   <div class="row mt-3"> 
+    <div class="col-md-6 mx-auto"> 
+     <div class="list-group" id="userList"></div> 
+    </div> 
+   </div> 
+  </div> 
+  <div id="totalValue"></div> 
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script> 
+ 
+<script type="text/javascript" id="dcoder_script">const apiEndpoint = "https://crudcrud.com/api/b775339c3f054f21b83de2587fa4599c/data";
+
+const form = document.querySelector("form");
+
+const userList = document.getElementById("userList");
+
+let totalValue = 0;
+
+async function getUsers() {
+  try {
+    const response = await axios.get(apiEndpoint);
+    const users = response.data;
+    users.forEach(user => {
+      addUserToList(user);
+      totalValue += parseInt(user.price);
+    });
+    displayTotalValue();
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+getUsers();
+
+form.addEventListener("submit", async event => {
+  event.preventDefault();
+
+  const price = parseInt(document.getElementById("price").value);
+  const name = document.getElementById("name").value;
+
+  const user = { price, name };
+
+  addUserToList(user);
+
+  try {
+    const response = await axios.post(apiEndpoint, user);
+    console.log(response);
+  } catch (error) {
+    console.log(error);
+  }
+
+  totalValue += price;
+  displayTotalValue();
+
+  form.reset();
+});
+
+function addUserToList(user) {
+  const listItem = document.createElement("li");
+  listItem.className = "list-group-item";
+
+  const editButton = document.createElement("button");
+  editButton.className = "btn btn-primary float-right ml-2";
+  editButton.innerHTML = "Edit";
+  editButton.addEventListener("click", async () => {
+    const listItemToDelete = listItem;
+    document.getElementById("price").value = user.price;
+    document.getElementById("name").value = user.name;
+
+    try {
+      const response = await axios.delete(`${apiEndpoint}/${user._id}`);
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+
+    userList.removeChild(listItemToDelete);
+    totalValue -= user.price;
+    displayTotalValue();
+  });
+
+  const deleteButton = document.createElement("button");
+  deleteButton.className = "btn btn-danger float-right ml-2";
+  deleteButton.innerHTML = "Delete";
+  deleteButton.addEventListener("click", async () => {
+    listItem.remove();
+
+    try {
+      const response = await axios.delete(`${apiEndpoint}/${user._id}`);
+      console.log(response);
+    } catch (error) {
+      console.log(error);
+    }
+
+    totalValue -= user.price;
+    displayTotalValue();
+  });
+
+  const textNode = document.createTextNode(
+    `${user.price} - ${user.name}`
+  );
+  
+  listItem.appendChild(editButton);
+  listItem.appendChild(deleteButton);
+  listItem.appendChild(textNode);
+
+  userList.appendChild(listItem);
+}
+
+function displayTotalValue() {
+  const totalValueElement = document.getElementById("totalValue");
+  totalValueElement.innerHTML = `Total value worth of products = Rs.${totalValue}`;
+}</script></body></html>
